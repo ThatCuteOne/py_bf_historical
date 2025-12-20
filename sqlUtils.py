@@ -1,0 +1,96 @@
+import sqlite3
+
+def create_connection(db_file):
+    """ create a database connection to the SQLite database
+        specified by db_file
+    :param db_file: database file
+    :return: Connection object or None
+    """
+    conn = None
+    try:
+        conn = sqlite3.connect(db_file)
+        return conn
+    except sqlite3.Error as e:
+        print(e)
+    try:
+        conn.cursor().execute("CREATE TABLE stats (id integer PRIMARY KEY, date text, players_online integer, players_in_dom integer, players_in_tdm integer, players_in_inf integer, players_in_gg integer, players_in_ttt integer, players_in_boot integer)")
+    except sqlite3.Error as e:
+        print(e)
+
+    return conn
+
+def add_stats(stats):
+    conn = create_connection("stats.db")
+    """
+    Create a new stats entry into the stats table
+    :param conn:
+    :param stats:
+    :return: stats id
+    """
+    sql = ''' INSERT INTO stats(date, players_online, players_in_dom, players_in_tdm, players_in_inf, players_in_gg, players_in_ttt, players_in_boot)
+              VALUES(?,?,?,?,?,?,?,?) '''
+    cur = conn.cursor()
+    cur.execute(sql, stats)
+    conn.commit()
+    return cur.lastrowid
+
+def get_all_stats():
+    conn = create_connection("stats.db")
+    """
+    Query all rows in the stats table
+    :param conn: the Connection object
+    :return:
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM stats")
+
+    rows = cur.fetchall()
+
+    return rows
+
+def get_latest_stats():
+    conn = create_connection("stats.db")
+    """
+    Query the latest row in the stats table
+    :param conn: the Connection object
+    :return:
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM stats ORDER BY id DESC LIMIT 1")
+
+    row = cur.fetchone()
+
+    return row
+
+def clear_stats():
+    conn = create_connection("stats.db")
+    """
+    Delete all rows in the stats table
+    :param conn: the Connection object
+    :return:
+    """
+    cur = conn.cursor()
+    cur.execute("DELETE FROM stats")
+    conn.commit()
+
+if __name__ == '__main__':
+    print("Runable functions:\n1. add_stats(stats_tuple)\n2. get_all_stats()\n3. get_latest_stats()\n4. clear_stats()")
+    choice = input("Enter the number of the function you want to run: ")
+    if choice == "1":
+        print("Enter stats as comma-separated values (date, players_online, players_in_dom, players_in_tdm, players_in_inf, players_in_gg, players_in_ttt, players_in_boot):")
+        stats_input = input()
+        stats_tuple = tuple(stats_input.split(","))
+        add_stats(stats_tuple)
+        print("Stats added.")
+    elif choice == "2":
+        print("All stats:")
+        for row in get_all_stats():
+            print(row)
+    elif choice == "3":
+        print("Latest stats:")
+        print(get_latest_stats())
+    elif choice == "4":
+        clear_stats()
+        print("All stats cleared.")
+    else:
+        print("Invalid choice.")
