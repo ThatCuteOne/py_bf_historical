@@ -10,11 +10,11 @@ def create_connection(db_file):
     conn = None
     try:
         conn = sqlite3.connect(db_file)
+        try:
+            conn.cursor().execute("CREATE TABLE cloud_stats (id integer PRIMARY KEY, date text, players_online integer, players_in_dom integer, players_in_tdm integer, players_in_inf integer, players_in_gg integer, players_in_ttt integer, players_in_boot integer)")
+        except sqlite3.Error as e:
+            print(e)
         return conn
-    except sqlite3.Error as e:
-        print(e)
-    try:
-        conn.cursor().execute("CREATE TABLE cloud_stats (id integer PRIMARY KEY, date text, players_online integer, players_in_dom integer, players_in_tdm integer, players_in_inf integer, players_in_gg integer, players_in_ttt integer, players_in_boot integer)")
     except sqlite3.Error as e:
         print(e)
 
@@ -90,7 +90,7 @@ def graph_data():
     :return:
     """
     cur = conn.cursor()
-    cur.execute("SELECT date, players_online, players_in_dom, players_in_tdm, players_in_inf, players_in_gg, players_in_ttt, players_in_boot FROM stats")
+    cur.execute("SELECT date, players_online, players_in_dom, players_in_tdm, players_in_inf, players_in_gg, players_in_ttt, players_in_boot FROM cloud_stats")
 
     rows = cur.fetchall()
     formatted_entries = []
@@ -113,25 +113,31 @@ def clear_stats():
     conn.commit()
 
 if __name__ == '__main__':
-    print("Runable functions:\n1. add_stats(stats_tuple)\n2. get_all_stats()\n3. get_latest_stats()\n4. two_cols_of_stats()\n5. clear_stats()")
+    print("Runable functions:\n1. Create Connection\n2. add_stats(stats_tuple)\n3. get_all_stats()\n4. get_latest_stats()\n5. two_cols_of_stats()\n6. clear_stats()")
     choice = input("Enter the number of the function you want to run: ")
     if choice == "1":
+        conn = create_connection("stats.db")
+        if conn:
+            print("Connection to database established.")
+        else:
+            print("Failed to establish connection.")
+    if choice == "2":
         print("Enter stats as comma-separated values (date, players_online, players_in_dom, players_in_tdm, players_in_inf, players_in_gg, players_in_ttt, players_in_boot):")
         stats_input = input()
         stats_tuple = tuple(stats_input.split(","))
         add_stats(stats_tuple)
         print("Stats added.")
-    elif choice == "2":
+    elif choice == "3":
         print("All stats:")
         for row in get_all_stats():
             print(row)
-    elif choice == "3":
+    elif choice == "4":
         print("Latest stats:")
         print(get_latest_stats())
-    elif choice == "4":
+    elif choice == "5":
         print("Two columns of stats:")
         print(two_cols_of_stats())
-    elif choice == "5": 
+    elif choice == "6": 
         clear_stats()
         print("All stats cleared.")
     else:
