@@ -34,7 +34,11 @@ html, body {
 
 a {
     color: white;
+}
+
+#title {
     text-decoration: none;
+    margin: 0;
 }
 
 a:hover {
