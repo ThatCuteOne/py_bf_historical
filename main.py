@@ -1,7 +1,6 @@
 from flask import Flask, render_template
 from fetchStats import fetchStats, fetchMatchStats
 import sqlUtils
-from minutesSince import minutesSince
 
 app = Flask(__name__)
 

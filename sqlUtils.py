@@ -9,15 +9,7 @@ DATA_DIR = os.path.join(BASE_DIR, 'data')
 if not os.path.exists(DATA_DIR):
     os.makedirs(DATA_DIR)
 
-if not os.path.exists('stats.db'):
-    try:
-        conn = sqlite3.connect('stats.db')
-    except sqlite3.Error as e:
-        print(f"Error connecting to database at stats.db: {e}")
-
 DB_FILE = os.path.join(DATA_DIR, 'stats.db')
-
-
 
 def create_connection(db_file=DB_FILE):
     """ create a database connection to the SQLite database """
