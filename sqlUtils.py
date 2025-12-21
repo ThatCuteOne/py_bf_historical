@@ -1,3 +1,4 @@
+import json
 import sqlite3
 
 def create_connection(db_file):
@@ -62,6 +63,44 @@ def get_latest_stats():
 
     return row
 
+def two_cols_of_stats():
+    conn = create_connection("stats.db")
+    """
+    Query date and players_online columns from stats table
+    :param conn: the Connection object
+    :return:
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT date, players_online FROM stats")
+
+    rows = cur.fetchall()
+
+    formatted_entries = []
+    for date_str, players in rows:
+        formatted_entries.append(f'  {{Date: new Date("{date_str}"), Players: {players}}}')
+
+    output = "[\n" + ",\n".join(formatted_entries) + "\n]" 
+    return output
+
+def graph_data():   
+    conn = create_connection("stats.db")
+    """
+    Query date and players_online columns from stats table
+    :param conn: the Connection object
+    :return:
+    """
+    cur = conn.cursor()
+    cur.execute("SELECT date, players_online, players_in_dom, players_in_tdm, players_in_inf, players_in_gg, players_in_ttt, players_in_boot FROM stats")
+
+    rows = cur.fetchall()
+    formatted_entries = []
+    for date_str, players_online, players_in_dom, players_in_tdm, players_in_inf, players_in_gg, players_in_ttt, players_in_boot in rows:
+        formatted_entries.append(f'  {{Date: new Date("{date_str}"), Players: {players_online}, Dom: {players_in_dom}, TDM: {players_in_tdm}, Inf: {players_in_inf}, GG: {players_in_gg}, TTT: {players_in_ttt}, Boot: {players_in_boot}}}')
+
+    output = "[\n" + ",\n".join(formatted_entries) + "\n]" 
+    return output
+
+
 def clear_stats():
     conn = create_connection("stats.db")
     """
@@ -74,7 +113,7 @@ def clear_stats():
     conn.commit()
 
 if __name__ == '__main__':
-    print("Runable functions:\n1. add_stats(stats_tuple)\n2. get_all_stats()\n3. get_latest_stats()\n4. clear_stats()")
+    print("Runable functions:\n1. add_stats(stats_tuple)\n2. get_all_stats()\n3. get_latest_stats()\n4. two_cols_of_stats()\n5. clear_stats()")
     choice = input("Enter the number of the function you want to run: ")
     if choice == "1":
         print("Enter stats as comma-separated values (date, players_online, players_in_dom, players_in_tdm, players_in_inf, players_in_gg, players_in_ttt, players_in_boot):")
@@ -90,6 +129,9 @@ if __name__ == '__main__':
         print("Latest stats:")
         print(get_latest_stats())
     elif choice == "4":
+        print("Two columns of stats:")
+        print(two_cols_of_stats())
+    elif choice == "5": 
         clear_stats()
         print("All stats cleared.")
     else:

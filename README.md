@@ -13,17 +13,18 @@ Main goals:
 - [ ] Make a way to specify players to log
 - [ ] Session stats
 
-## Cloud stats 
-- [ ] Create model for cloud stats
-- [ ] Create job to fetch cloud stats
+### Cloud stats 
+- [x] Create table for cloud stats
+    - [ ] Rename 'stats' to 'cloud_stats'
+- [x] Create job to fetch cloud stats
 - [ ] Make page with cloud stats graph and table
 
-## Player stats
-- [ ] Create model for player stats
+### Player stats
+- [ ] Create table for player stats
 - [ ] Create job to fetch player stats
 - [ ] Make page with player stats graph and table
 
-## Session stats
-- [ ] Create model for session stats
+### Session stats
+- [ ] Create table for session stats
 - [ ] Create service to fetch session stats
 - [ ] Make page with session stats

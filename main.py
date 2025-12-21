@@ -15,7 +15,11 @@ scheduler.init_app(app)
 
 @app.route("/")
 def index():
-    return render_template('index.html', players_online=sqlUtils.get_latest_stats()[2], last_updated=minutesSince(sqlUtils.get_latest_stats()[1]))
+    return render_template('index.html',
+    players_online=sqlUtils.get_latest_stats()[2],
+    last_updated=minutesSince(sqlUtils.get_latest_stats()[1]),
+    raw_data=sqlUtils.graph_data()
+    )
 
 @app.route("/player/<username>")
 def playerStats(username):
@@ -25,6 +29,14 @@ def playerStats(username):
 def stats_test():
     fetchStats()
     return f'<p>Latest stats: {sqlUtils.get_latest_stats()[2]}</p>'
+
+@app.route("/playersOverTime")
+def players_over_time():
+    return sqlUtils.two_cols_of_stats()
+
+@app.route("/chart")
+def chartPage():
+    return render_template('e.html', raw_data=sqlUtils.graph_data())
 
 if __name__ == '__main__':
     # Add the job
