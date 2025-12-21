@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockfront historical</title>
+    <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/master.css')}}"/>
+    <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/index.css')}}"/>
+</head>
+<body>
+    <nav>
+        <div id="menu">
+            <h1>Blockfront Historical</h1>
+            <ul id="topinfo">
+                <li><strong>{{players_in_match}}</strong> players online</li>   
+                <li><a href="https://github.com/seth-the-cat/py_bf_historical">Github</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+    <div id="player-stats">
+        <h2>Stats for player <strong>{{username}}</strong></h2>
+        <pre>{{ match_data }}</pre>
+    </div>
+    </main>
+</body>
+</html>

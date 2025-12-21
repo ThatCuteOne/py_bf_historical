@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from fetchStats import fetchStats
+from fetchStats import fetchStats, fetchMatchStats
 import sqlUtils
 from minutesSince import minutesSince
 
@@ -28,7 +28,8 @@ def index():
 
 @app.route("/player/<username>")
 def playerStats(username):
-    return f'<p>Stats for player <strong>{username}<strong></p>'
+    match_data, players_in_match = fetchMatchStats(username)
+    return render_template('player.html', username=username, match_data=match_data, players_in_match=players_in_match)
 
 @app.route("/stats_test")
 def stats_test():
@@ -45,4 +46,4 @@ def chartPage():
 
 if __name__ == '__main__':
     # You can keep this specifically for local testing if you want
-    app.run(debug=True, use_reloader=False)
+    app.run(debug=True, use_reloader=True)
