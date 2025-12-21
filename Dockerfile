@@ -31,4 +31,4 @@ EXPOSE 8000
 # "app:app" stands for "module_name:variable_name"
 # -w 4: Uses 4 worker processes (Adjust based on CPU cores)
 # -b 0.0.0.0:8000: Binds to all interfaces on port 8000
-CMD ["gunicorn", "-w", "1", "-b", "0.0.0.0:8000", "main:app"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:8000", "main:app"]
