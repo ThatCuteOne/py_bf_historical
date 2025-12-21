@@ -31,9 +31,6 @@ def fetchCloudStats():
         data.get("game_player_count").get("boot"),
     )
     sqlUtils.add_stats(data_tuple)
-
-if __name__ == "__main__":
-    fetchCloudStats()
-
+    
 def fetchStats():
     fetchCloudStats()

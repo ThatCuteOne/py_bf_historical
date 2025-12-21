@@ -21,23 +21,6 @@ def index():
     raw_data=sqlUtils.graph_data()
     )
 
-@app.route("/player/<username>")
-def playerStats(username):
-    return f'<p>Stats for player <strong>{username}<strong></p>'
-
-@app.route("/stats_test")
-def stats_test():
-    fetchStats()
-    return f'<p>Latest stats: {sqlUtils.get_latest_stats()[2]}</p>'
-
-@app.route("/playersOverTime")
-def players_over_time():
-    return sqlUtils.two_cols_of_stats()
-
-@app.route("/chart")
-def chartPage():
-    return render_template('e.html', raw_data=sqlUtils.graph_data())
-
 if __name__ == '__main__':
     fetchStats()  # Fetch stats once at startup
     # Add the job
