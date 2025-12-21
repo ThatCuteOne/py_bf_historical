@@ -13,7 +13,7 @@ if not os.path.exists('stats.db'):
     try:
         conn = sqlite3.connect('stats.db')
     except sqlite3.Error as e:
-        print(f"Error connecting to database at {db_file}: {e}")
+        print(f"Error connecting to database at stats.db: {e}")
 
 DB_FILE = os.path.join(DATA_DIR, 'stats.db')
 
