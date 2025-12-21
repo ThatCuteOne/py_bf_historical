@@ -1,6 +1,9 @@
 # Blockfront Historical
 Website for viewing Blockfront stats overtime
 
+## Contributors
+@Seth-the-cat, @xeovis
+
 ## TODO
 Main goals:
 - [x] Fetch cloud stats and graph
