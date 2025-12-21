@@ -25,3 +25,6 @@ Main goals:
 - [ ] Create table for session stats
 - [ ] Create service to fetch session stats
 - [ ] Make page with session stats
+
+### Maybe Overlay / match stats grabber
+Like a bedwars overlay but for blockfront.
