@@ -32,8 +32,13 @@ def fetchCloudStats():
     )
     sqlUtils.add_stats(data_tuple)
 
+def fetchMatchStats(name):
+    data = get_json("https://blockfrontapi.vuis.dev/api/v1/player_status?uuid=" + name)
+    print("\nFetch Process: Fetched match stats")
+    # Process match stats as needed
+
 if __name__ == "__main__":
-    fetchCloudStats()
+    fetchMatchStats("WidRush")
 
 def fetchStats():
     fetchCloudStats()

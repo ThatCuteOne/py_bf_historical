@@ -2,16 +2,31 @@ from flask import Flask, render_template
 from flask_apscheduler import APScheduler
 import sched, time
 from fetchStats import fetchStats
-# from debugUtils import saysomething
 import sqlUtils
 from minutesSince import minutesSince
 
 app = Flask(__name__)
 
+# Initialize Scheduler
 scheduler = APScheduler()
 scheduler.init_app(app)
 
-# run function
+# --- CORRECTED SECTION ---
+# Define and start the scheduler in the global scope so Gunicorn loads it.
+if not scheduler.running:
+    # Add the job
+    scheduler.add_job(id='Scheduled Task', func=fetchStats, trigger='interval', minutes=10)
+    
+    # Start the scheduler
+    scheduler.start()
+    
+    # Optional: Run an initial fetch immediately on startup
+    # Note: Be careful with this if you have multiple workers (see below)
+    try:
+        fetchStats()
+    except Exception as e:
+        print(f"Initial fetch failed: {e}")
+# -------------------------
 
 @app.route("/")
 def index():
@@ -39,13 +54,5 @@ def chartPage():
     return render_template('e.html', raw_data=sqlUtils.graph_data())
 
 if __name__ == '__main__':
-    fetchStats()  # Fetch stats once at startup
-    # Add the job
-    scheduler.add_job(id='Scheduled Task', func=fetchStats, trigger='interval', minutes=10)
-    
-    # Start the scheduler
-    scheduler.start()
-    
-    # Start the Flask server
-    # use_reloader=False is important! Otherwise, the scheduler might run twice.
+    # You can keep this specifically for local testing if you want
     app.run(debug=True, use_reloader=False)

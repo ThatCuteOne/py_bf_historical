@@ -28,3 +28,4 @@ Main goals:
 
 ### Maybe Overlay / match stats grabber
 Like a bedwars overlay but for blockfront.
+Will need to see how laggy or slow this is.
