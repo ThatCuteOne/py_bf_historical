@@ -1,6 +1,23 @@
 from flask import Flask, render_template
-from fetchStats import fetchStats, fetchMatchStats
-import sqlUtils
+from src.fetchStats import fetchStats, fetchMatchStats
+import src.utils.sql as sqlUtils
+
+from apscheduler.schedulers.blocking import BlockingScheduler
+
+# Use BlockingScheduler so the script stays alive
+sched = BlockingScheduler()
+
+# Schedule the job
+sched.add_job(fetchStats, 'interval', minutes=10)
+
+print("Worker started. Running initial fetch...")
+try:
+    fetchStats() # Run once on startup
+except Exception as e:
+    print(f"Error in initial fetch: {e}")
+
+# Start the scheduler (this will block and keep the container running)
+sched.start()
 
 app = Flask(__name__)
 
