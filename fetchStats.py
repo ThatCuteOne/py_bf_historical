@@ -2,6 +2,7 @@ import requests
 from requests import RequestException
 from typing import Any, Dict, Optional
 from datetime import datetime
+from htmlUtils import gen_html_from_players
 
 import sqlUtils
 
@@ -33,28 +34,15 @@ def fetchCloudStats():
     sqlUtils.add_stats(data_tuple)
 
 def fetchMatchStats(name: str):
-    def gen_html_from_players(players):
-        rows = "".join(
-            f"<tr><td>{p.get('username')}</td>"
-            f"<td>{p.get('Prestige', 0)}</td>"
-            f"<td>{p.get('Rank')}</td>"
-            f"<td>{p.get('kills', 0)}</td>"
-            f"<td>{p.get('deaths', 0)}</td>"
-            f"<td>{round(p.get('kills', 0) / p.get('deaths', 1) if p.get('deaths', 0) > 0 else 0, 4)}</td></tr>"
-            for p in players
-        )
-        return "<table><tr><th>Username</th><th>Prestige</th><th>Rank</th><th>Kills</th><th>Deaths</th><th>KDR</th></tr>" + rows + "</table>"
-
     data = get_json(f"https://blockfrontapi.vuis.dev/api/v1/player_status?name={name}")
 
     if not data.get("online"):
         print("Player is offline.")
-        return f"{name} is offline."
+        return f"{name} is offline.", "Player is offline."
     match = data.get("match")
     if not match:
         print("No match data found for player.")
-        return "Name not found or player is not in a match."
-
+        return "Name not found or player is not in a match.", "No match data found for player."
     uuids = [p["uuid"] for p in match.get("players", [])]
     print("\nFetch Process: Fetched player UUIDs")
     uuids_str = ",".join(uuids)
@@ -73,6 +61,10 @@ def fetchMatchStats(name: str):
     ]
 
     return gen_html_from_players(players_in_match), f"{len(players_in_match)} out of {match.get('max_players')} players in match."
+
+def fetchPlayersStats(uuids=sqlUtils.get_players()):
+    resp = requests.post("https://blockfrontapi.vuis.dev/api/v1/player_data/bulk", data=uuids).json()
+    sqlUtils.add_player(resp)
 
 def fetchStats():
     fetchCloudStats()

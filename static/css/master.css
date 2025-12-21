@@ -34,6 +34,7 @@ html, body {
 
 a {
     color: white;
+    text-decoration: none;
 }
 
 a:hover {
@@ -44,4 +45,17 @@ table, th, td {
     border: 1px solid white;
     border-collapse: collapse;
     padding: 5px;
+}
+
+input[type=text] {
+    background-color: black;
+    color: white;
+    padding: 3px;
+    margin: 2px;
+    border: none;
+    border-bottom: 1px solid white;
+}
+
+input[type=text]:focus {
+    outline: none;
 }

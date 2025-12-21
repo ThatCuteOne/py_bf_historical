@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blockfront historical</title>
+    <title>Match Statistics -Blockfront historical</title>
     <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/master.css')}}"/>
     <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/index.css')}}"/>
 </head>
@@ -20,7 +20,7 @@
 
     <main>
     <div id="player-stats">
-        <h2>Match Player stats for {{username}}</h2>
+        <h2>Players in <span style="color: lightslategrey">{{username}}</span>'s match</h2>
         {{ match_html|safe }}
     </div>
     </main>

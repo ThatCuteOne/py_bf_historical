@@ -36,6 +36,10 @@ def create_connection(db_file=DB_FILE):
             print("Table 'cloud_stats' not found. Creating it...")
             cur.execute("CREATE TABLE cloud_stats (id integer PRIMARY KEY, date text, players_online integer, players_in_dom integer, players_in_tdm integer, players_in_inf integer, players_in_gg integer, players_in_ttt integer, players_in_boot integer)")
             conn.commit()
+        if cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='players';").fetchone() is None:
+            print("Table 'players' not found. Creating it...")
+            cur.execute("CREATE TABLE players (id integer PRIMARY KEY, uuid text UNIQUE)")
+            conn.commit()
     except sqlite3.Error as e:
         print(f"Error creating table: {e}")
 
@@ -52,8 +56,31 @@ def add_stats(stats):
     cur.execute(sql, stats)
     conn.commit()
     last_id = cur.lastrowid
-    conn.close() # Good practice to close connections
+    conn.close()
     return last_id
+
+def add_player(username):
+    """ Create a new player entry into the players table """
+    conn = create_connection()
+    if conn is None: return
+    
+    sql = ''' INSERT INTO players(uuid)
+              VALUES(?) '''
+    cur = conn.cursor()
+    cur.execute(sql, (username,))
+    conn.commit()
+    last_id = cur.lastrowid
+    conn.close()
+    return last_id
+
+def get_players():
+    """ Query all rows in the players table """
+    conn = create_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM players")
+    rows = cur.fetchall()
+    conn.close()
+    return rows
 
 def get_all_stats():
     """ Query all rows in the stats table """
@@ -80,7 +107,6 @@ def two_cols_of_stats():
     cur.execute("SELECT date, players_online FROM cloud_stats")
     rows = cur.fetchall()
     conn.close()
-
     formatted_entries = []
     for date_str, players in rows:
         formatted_entries.append(f'  {{Date: new Date("{date_str}"), Players: {players}}}')
@@ -111,6 +137,7 @@ def clear_stats():
     conn.commit()
     conn.close()
 
+# Runable functions for testing/debugging
 if __name__ == '__main__':
     print(f"Database Path: {DB_FILE}")
     print("Runable functions:\n1. Create Connection\n2. add_stats(stats_tuple)\n3. get_all_stats()\n4. get_latest_stats()\n5. two_cols_of_stats()\n6. clear_stats()")

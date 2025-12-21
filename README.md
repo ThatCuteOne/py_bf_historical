@@ -1,9 +1,6 @@
 # Blockfront Historical
 Website for viewing Blockfront stats overtime. This utilzes vuis's API for interacting with blockfronts internal API.
 
-## Contributors
-@Seth-the-cat, @xeovis
-
 ## TODO
 Main goals:
 - [x] Fetch cloud stats and graph
@@ -35,3 +32,6 @@ Main goals:
 
 You can search for a player (i.e yourself), then it pulls up the match players with some stats.
 
+### QOL
+- [ ] Redo graphs to d3.js
+- [ ] Create proper db structure

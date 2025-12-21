@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockfront historical</title>
+    <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/master.css')}}"/>
+    <link type="text/css" rel="stylesheet" href="{{url_for('static', filename='css/index.css')}}"/>
+</head>
+<body>
+    <nav>
+        <div id="menu">
+            <h1>Blockfront Historical</h1>
+            <ul id="topinfo">
+                <li><strong>{{players_online}}</strong> players online</li>
+                <li id="last_update"></li>
+                <li>Search player match: <input onkeyup="if(event.key==='Enter'){location.href='/player/'+this.value};" type="text"></input></li>   
+                <li><a href="https://github.com/seth-the-cat/py_bf_historical">Github</a></li>
+            </ul>
+            <script>
+                const lastUpdated = new Date("{{last_updated}}Z");
+                function updateLastUpdated() {
+                    const now = new Date();
+                    const diffMs = now - lastUpdated;
+                    const diffMins = Math.floor(diffMs / 60000);
+                    const diffSecs = Math.floor((diffMs % 60000) / 1000);
+                    let displayText = "Last updated: ";
+                    if (diffMins >= 10) {
+                        location.reload();
+                    } if (diffMins > 0) {
+                        displayText += `${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;
+                    } else {
+                        displayText += `${diffSecs} second${diffSecs !== 1 ? 's' : ''} ago`;
+                    }
+                    document.getElementById("last_update").innerText = displayText;
+                }
+                setInterval(updateLastUpdated, 1000);
+                updateLastUpdated();
+            </script>
+        </div>
+    </nav>

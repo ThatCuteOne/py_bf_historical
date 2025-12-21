@@ -3,3 +3,7 @@ main {
     justify-content: center;
     align-items: center;
 }
+
+#last_update {
+    cursor: help;
+}
