@@ -1,4 +1,3 @@
-import json
 import sqlite3
 
 def create_connection(db_file):
@@ -10,13 +9,11 @@ def create_connection(db_file):
     conn = None
     try:
         conn = sqlite3.connect(db_file)
-        try:
-            conn.cursor().execute("CREATE TABLE cloud_stats (id integer PRIMARY KEY, date text, players_online integer, players_in_dom integer, players_in_tdm integer, players_in_inf integer, players_in_gg integer, players_in_ttt integer, players_in_boot integer)")
-        except sqlite3.Error as e:
-            print(e)
-        return conn
     except sqlite3.Error as e:
         print(e)
+    if conn.cursor().execute("SELECT name FROM sqlite_master WHERE type='table' AND name='cloud_stats';").fetchone() is None:
+        conn.cursor().execute("CREATE TABLE cloud_stats (id integer PRIMARY KEY, date text, players_online integer, players_in_dom integer, players_in_tdm integer, players_in_inf integer, players_in_gg integer, players_in_ttt integer, players_in_boot integer)")
+    return conn
 
     return conn
 

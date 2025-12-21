@@ -39,6 +39,7 @@ def chartPage():
     return render_template('e.html', raw_data=sqlUtils.graph_data())
 
 if __name__ == '__main__':
+    fetchStats()  # Fetch stats once at startup
     # Add the job
     scheduler.add_job(id='Scheduled Task', func=fetchStats, trigger='interval', minutes=10)
     
