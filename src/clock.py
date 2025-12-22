@@ -1,5 +1,5 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
-from fetchStats import fetchStats
+from src.fetchStats import fetchStats
 
 # Use BlockingScheduler so the script stays alive
 sched = BlockingScheduler()
