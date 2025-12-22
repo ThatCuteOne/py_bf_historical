@@ -3,7 +3,7 @@ version: '3.8'
 services:
   web:
     build: .
-    command: gunicorn -w 1 -b 0.0.0.0:8000 src.__main__:app
+    command: gunicorn -w 1 -b 0.0.0.0:8000 main:app
     ports:
       - "8000:8000"
     volumes:
@@ -12,7 +12,7 @@ services:
 
   worker:
     build: .
-    command: python -m src
+    command: python clock.py
     volumes:
       - ./data:/app/data  # <--- Must match the web volume!
     restart: always
