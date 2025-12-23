@@ -41,7 +41,10 @@ def addMuted(json):
         return ' 🔇'
 
 def fetchMatchStats(name: str):
-    data = get_json(f"https://blockfrontapi.vuis.dev/api/v1/player_status?name={name}")
+    try:
+        data = get_json(f"https://blockfrontapi.vuis.dev/api/v1/player_status?name={name}")
+    except:
+        return f"<h3> <span style='color: red;'>Something went wrong... Check if <i>{name}</i> is a real player! </span></h3>", "⚠️ Failed to fetch match stats"
 
     if not data.get("online"):
         print("Player is offline.")
