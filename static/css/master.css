@@ -34,10 +34,11 @@ html, body {
 
 a {
     color: white;
+    text-decoration: none;
 }
 
-#title {
-    text-decoration: none;
+a h1 {
+    box-sizing: border-box;
     margin: 0;
 }
 

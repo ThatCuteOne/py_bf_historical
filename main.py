@@ -50,6 +50,10 @@ def players_over_time():
 def chartPage():
     return render_template('e.html', raw_data=sqlUtils.graph_data())
 
+@app.errorhandler(404)
+def not_found(e):
+    return render_template("404.html")
+
 if __name__ == '__main__':
     # You can keep this specifically for local testing if you want
     app.run(debug=True, use_reloader=True)
