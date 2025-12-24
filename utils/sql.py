@@ -150,7 +150,7 @@ def get_player_stats(uuid):
 def check_player(name):
     """ Query all rows in the players table """
     with get_cursor() as cur:
-        cur.execute("SELECT * FROM players WHERE name=?", (name,))
+        cur.execute("SELECT * FROM players WHERE name COLLATE NOCASE = ?", (name,))
         rows = cur.fetchall()
         if len(rows) > 0:
             return True
