@@ -1,15 +1,14 @@
 import contextlib
+from pathlib import Path
 import sqlite3
 import requests
 import os
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-DATA_DIR = os.path.join(BASE_DIR, 'data')
-
+DATA_DIR = Path("./data")
 # Ensure the 'data' directory exists before we try to connect
-if not os.path.exists(DATA_DIR):
-    os.makedirs(DATA_DIR)
+os.makedirs(DATA_DIR,exist_ok=True)
+   
 
 DB_FILE = os.path.join(DATA_DIR, 'stats.db')
 
