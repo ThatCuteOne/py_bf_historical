@@ -30,7 +30,7 @@ def create_connection(db_file=DB_FILE):
         cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='cloud_stats';")
         if cur.fetchone() is None:
             print("Table 'cloud_stats' not found. Creating it...")
-            cur.execute("CREATE TABLE cloud_stats (id integer PRIMARY KEY, date text, players_online integer, players_in_dom integer, players_in_tdm integer, players_in_inf integer, players_in_gg integer, players_in_ttt integer, players_in_boot integer)")
+            cur.execute("CREATE TABLE cloud_stats (id integer PRIMARY KEY, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, players_online integer, players_in_dom integer, players_in_tdm integer, players_in_inf integer, players_in_gg integer, players_in_ttt integer, players_in_boot integer)")
             conn.commit()
         if cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='players';").fetchone() is None:
             print("Table 'players' not found. Creating it...")
@@ -42,7 +42,7 @@ def create_connection(db_file=DB_FILE):
                                 CREATE TABLE IF NOT EXISTS player_stats (
                                     stat_id INTEGER PRIMARY KEY,
                                     player_id INTEGER,
-                                    date TEXT DEFAULT CURRENT_TIMESTAMP,
+                                    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                     kills INTEGER ,
                                     assists INTEGER ,
                                     deaths INTEGER ,
