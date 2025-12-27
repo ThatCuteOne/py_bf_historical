@@ -22,7 +22,6 @@ def fetchCloudStats():
     print("\nFetch Process: Fetched cloud stats")
     print("\nFetch Process: Storing stats in database...")
     data_tuple = (
-        datetime.now().isoformat(),
         data.get("players_online"),
         data.get("game_player_count").get("dom"),
         data.get("game_player_count").get("tdm"),

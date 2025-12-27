@@ -19,18 +19,42 @@
                 <li><a href="https://github.com/seth-the-cat/py_bf_historical">Github</a></li>
             </ul>
             <script>
-                const lastUpdated = new Date("{{last_updated}}");
+                // Normalize the timestamp returned by SQLite ("YYYY-MM-DD HH:MM:SS") to a proper ISO-8601 UTC string
+                const rawLastUpdated = "{{last_updated}}";
+                let lastUpdatedIso = rawLastUpdated;
+                if (!rawLastUpdated.includes('T')) {
+                    // Replace the space between date and time with 'T' and append 'Z' to force UTC parsing
+                    lastUpdatedIso = rawLastUpdated.replace(' ', 'T') + 'Z';
+                } else if (!rawLastUpdated.endsWith('Z') && !/\+|\-/.test(rawLastUpdated)) {
+                    // If it has a 'T' but no timezone, append 'Z'
+                    lastUpdatedIso = rawLastUpdated + 'Z';
+                }
+
+                // Try parsing; if parsing fails, build a UTC date from components
+                let lastUpdated = new Date(lastUpdatedIso);
+                if (isNaN(lastUpdated.getTime())) {
+                    const parts = rawLastUpdated.match(/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/);
+                    if (parts) {
+                        lastUpdated = new Date(Date.UTC(+parts[1], parts[2] - 1, +parts[3], +parts[4], +parts[5], +parts[6]));
+                    } else {
+                        // Fallback to now to avoid misleading negative values
+                        console.warn('Could not parse last_updated:', rawLastUpdated);
+                        lastUpdated = new Date();
+                    }
+                }
+
                 function updateLastUpdated() {
                     const now = new Date();
                     const diffMs = now - lastUpdated;
                     const diffMins = Math.floor(diffMs / 60000);
                     const diffSecs = Math.floor((diffMs % 60000) / 1000);
                     let displayText = "Last updated ";
-                    if (diffMins >= 10 & diffMins < 11) {
+                    // Reload briefly after ~10 minutes, show warnings for older values
+                    if (diffMins >= 10 && diffMins < 11) {
                         location.reload();
-                    } if (diffMins > 11) {
+                    } else if (diffMins > 11) {
                         displayText += `${diffMins} minutes ago. ⚠️ Stats fetching likely down. Contact seththecat.`;
-                    } if (diffMins > 0) {
+                    } else if (diffMins > 0) {
                         displayText += `${diffMins} minute${diffMins !== 1 ? 's' : ''} ago`;
                     } else {
                         displayText += `${diffSecs} second${diffSecs !== 1 ? 's' : ''} ago`;

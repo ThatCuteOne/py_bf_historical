@@ -45,7 +45,7 @@ def add_player():
 @app.route("/stats_test")
 def stats_test():
     fetchStats()
-    return f'<p>Latest stats: {sql.get_latest_stats()[2]}</p>'
+    return f'<p>Latest stats: {sql.get_latest_stats()[1]}</p>'
 
 # Show players over time data
 @app.route("/playersOverTime")
