@@ -1,27 +1,15 @@
 
 import logging
 import requests
-from requests import RequestException
-from typing import Any, Dict, Optional
 from utils.html import gen_html_from_players
 
 import utils.sql as sql
 import utils.network as network
 logger = logging.getLogger(__name__)
 
-def get_json(url: str, params: Optional[Dict[str, Any]] = None, timeout: float = 5.0) -> Dict[str, Any]:
-    """Send a GET request to the given URL and parse the response as JSON."""
-    try:
-        response = requests.get(url, params=params, timeout=timeout)
-        response.raise_for_status()
-        return response.json()
-    except RequestException as exc:
-        raise exc
-    except ValueError:
-        raise ValueError(f"Response from {url} was not valid JSON.")
 
 def fetchCloudStats():
-    data = get_json("https://blockfrontapi.vuis.dev/api/v1/cloud_data")
+    data = network.get_request("api/v1/cloud_data")
     logger.info("\nFetch Process: Fetched cloud stats")
     logger.info("\nFetch Process: Storing stats in database...")
     data_tuple = (
@@ -44,7 +32,7 @@ def fetchMatchStats(name: str):
             return ' 🔇'
      
     try:
-        data = get_json(f"https://blockfrontapi.vuis.dev/api/v1/player_status?name={name}")
+        data = network.get_request(f"https://blockfrontapi.vuis.dev/api/v1/player_status?name={name}")
     except:
         return f"<h3> <span style='color: red;'>Something went wrong... Check if <i>{name}</i> is a real player! </span></h3>", "⚠️ Failed to fetch match stats"
 
