@@ -72,8 +72,13 @@ def fetchMatchStats(name: str):
     return gen_html_from_players(players_in_match), f"{len(players_in_match)} out of {match.get('max_players')} players in match."
 
 def fetchPlayersStats():
-    print("test\n-------------")
+    print("-------------")
+    sql_result = sql.get_players_uuids()
+    if not sql_result:
+        print("[fetchPlayersStats] No players Found in database skipping")
+        return
     uuids = ", ".join([tup[0] for tup in sql.get_players_uuids()])
+
     resp = requests.post("https://blockfrontapi.vuis.dev/api/v1/player_data/bulk", data=uuids).json()
     print(str(resp)+"\n-------------")
     output = {}
@@ -82,6 +87,7 @@ def fetchPlayersStats():
     MAPPING = {'back_stabs': 'backstabs', 'head_shots': 'headshots', 'trophies': 'match_wins'}
     CLASS_ID_MAP = {0: 'rifle_xp', 1: 'lt_rifle_xp', 2: 'assault_xp', 3: 'support_xp', 4: 'medic_xp', 5: 'sniper_xp', 6: 'gunner_xp', 7: 'anti_tank_xp', 9: 'commander_xp'}
     for player_data in resp:
+        print(f"meoooow {player_data}")
         print(f"({player_data, type(player_data)}\n\n-------------")
         output = {}
         for field in DIRECT_FEILD:
