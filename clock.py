@@ -5,7 +5,6 @@ logging.basicConfig(
 )
 from apscheduler.schedulers.blocking import BlockingScheduler
 from fetchStats import fetchStats
-# Then set up logging
 # Use BlockingScheduler so the script stays alive
 sched = BlockingScheduler()
 
