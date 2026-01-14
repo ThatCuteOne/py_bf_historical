@@ -89,16 +89,13 @@ def fetchPlayersStats():
                 output[field] = player_data[field]
         for key, mapped_key in MAPPING.items():
             if key in player_data:
-                logger.debug(f"{key, player_data[key]}\n\n-------------")
                 output[mapped_key] = player_data[key]
         for entry in player_data.get('class_exp', []):
                 c_id = entry.get('id')
                 if c_id in CLASS_ID_MAP:
                     output[CLASS_ID_MAP[c_id]] = entry.get('exp', 0)
         # find player's DB id by UUID, skip if not present
-        logger.debug(f"{output}\n\n")
         player_db_id = sql.get_player_id_by_name(player_data['username'])
-        logger.info(f"{player_db_id}{player_data['uuid']}\n\n-------------")
         if not player_db_id:
             logger.info(f"Skipping player {player_data.get('username')} ({player_data.get('uuid')}): not found in DB")
             continue

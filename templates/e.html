@@ -85,9 +85,10 @@ const color = d3.scaleOrdinal(d3.schemeCategory10).domain(keys);
 const xAxisG = svg.append('g')
   .attr('transform', `translate(0,${height})`)
   .attr('class','x-axis')
-  .call(d3.axisBottom(x).ticks(d3.timeHour.every(2)).tickFormat(d3.timeFormat('%H:%M')))
+  // FIX: Remove .ticks(d3.timeHour.every(2)) and .tickFormat(...)
+  // width / 80 tells D3 to place a tick roughly every 80 pixels, preventing overlap
+  .call(d3.axisBottom(x).ticks(width / 80))
   .selectAll('text').style('fill','white');
-
 const yAxisG = svg.append('g')
   .attr('class','y-axis')
   .call(d3.axisLeft(y))
@@ -152,17 +153,20 @@ function zoomed(event) {
   const t = event.transform;
   let newX = t.rescaleX(x);
 
-  // clamp domain to available data range (so user can't pan to empty space)
+  // clamp domain to available data range
   let dom = newX.domain();
   let clamped = false;
   if (dom[0] < minDate) { const delta = minDate - dom[0]; dom[0] = minDate; dom[1] = new Date(dom[1].getTime() + delta); clamped = true; }
   if (dom[1] > maxDate) { const delta = dom[1] - maxDate; dom[1] = maxDate; dom[0] = new Date(dom[0].getTime() - delta); clamped = true; }
 
-  // if clamped, build a fresh scale using clamped domain; else use newX directly
   const useX = clamped ? d3.scaleTime().domain(dom).range([0, width]) : newX;
 
   // update axis and lines
-  svg.select('.x-axis').call(d3.axisBottom(useX).ticks(d3.timeHour.every(2)).tickFormat(d3.timeFormat('%H:%M')));
+  // FIX: Use the same dynamic tick count here. 
+  // We also removed the forced timeFormat so D3 will automatically show dates (Jan 1) when zoomed out, 
+  // and times (12:00) when zoomed in.
+  svg.select('.x-axis').call(d3.axisBottom(useX).ticks(width / 80));
+  
   linesG.selectAll('.line').attr('d', d => d3.line().x(d2 => useX(d2.date)).y(d2 => y(d2.value))(d.values));
 }
 
