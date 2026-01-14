@@ -68,14 +68,15 @@ def fetchPlayersStats():
         logger.info("No players Found in database skipping")
         return
     uuids = [tup[0] for tup in sql_result]
-    logger.info(f"Making request to api for {uuids}")
+    uuid_string = ",".join(uuids)
+    logger.info(f"Making request to api for '{uuid_string}'")
     try:
-        response = network.post_request("/api/v1/player_data/bulk",data=uuids)
+        response = network.post_request("/api/v1/player_data/bulk",data=uuid_string,is_json=False)
     except Exception as e:
         logger.error(f"ERROR making API request: {e}")
         return
 
-    api_data = response.json()
+    api_data = response
     logger.debug(str(api_data)+"\n-------------")
     DIRECT_FEILD = [
     'kills', 'deaths', 'assists', 'infected_kills', 'vehicle_kills', 'bot_kills', 'infected_rounds_won', 'infected_matches_won', 'highest_kill_streak', 'highest_death_streak', 'exp', 'prestige', 'total_games', 'time_played', 'no_scopes', 'first_bloods', 'fire_kills', 'match_karma']
